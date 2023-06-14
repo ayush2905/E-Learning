@@ -1,23 +1,23 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-const UserNav = () => {
-
-    //for active nav links 
+const InstructorNav = () => {
     const [current, setCurrent] = useState("");
 
-    //used for to select the option based on the url path
     useEffect(() => {
         process.browser && setCurrent(window.location.pathname);
       }, [process.browser && window.location.pathname]);
 
     return (
         <div className="nav flex-column nav-pills">
-            <Link href="/user">
-            <a className={`nav-link ${current === "/user" && "active"}`}>Dashboard</a>
+            <Link href="/instructor">
+                <a className={`nav-link ${current === "/instructor" && "active"}`}>Dashboard</a>
+            </Link>
+            <Link href="/instructor/course/create">
+            <a className={`nav-link ${current === "/instructor/course/create" && "active"}`}>Course Create</a>
             </Link>
         </div>
     );
 };
 
-export default UserNav;
+export default InstructorNav;

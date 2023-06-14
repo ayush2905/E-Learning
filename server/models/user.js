@@ -1,6 +1,22 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
 
+const imageSchema = new Schema(
+  {
+  key: { 
+    type: String, 
+    required: true 
+  },
+  contentType: { 
+    type: String, 
+    required: true 
+  },
+  data: {
+    type: Buffer,
+    required: true
+  }
+});
+
 const userSchema = new Schema(
   {
     name: {
@@ -29,6 +45,7 @@ const userSchema = new Schema(
       default: ["Subscriber"],
       enum: ["Subscriber", "Instructor", "Admin"],
     },
+    images: [imageSchema],
     stripe_account_id: "",
     stripe_seller: {},
     stripeSession: {},

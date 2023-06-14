@@ -8,7 +8,7 @@ import {
   LogoutOutlined,
   UserAddOutlined,
   CarryOutOutlined,
-  TeamOutlined
+  TeamOutlined,
 } from "@ant-design/icons";
 import { Context } from "../context";
 import axios from "axios";
@@ -38,7 +38,7 @@ const TopNav = () => {
   };
 
   return (
-    <Menu mode="horizontal" selectedKeys={[current]}>
+    <Menu mode="horizontal" selectedKeys={[current]} className="mb-2">
       <Item
         key="/"
         onClick={(e) => setCurrent(e.key)}
@@ -51,24 +51,24 @@ const TopNav = () => {
 
       {user && user.role && user.role.includes("Instructor") ? (
         <Item
-        key="/instructor/course/create"
-        onClick={(e) => setCurrent(e.key)}
-        icon={<CarryOutOutlined />}
-      >
-        <Link href="/instructor/course/create">
-          <a>Create Course</a>
-        </Link>
-      </Item>
-      ): (
+          key="/instructor/course/create"
+          onClick={(e) => setCurrent(e.key)}
+          icon={<CarryOutOutlined />}
+        >
+          <Link href="/instructor/course/create">
+            <a>Create Course</a>
+          </Link>
+        </Item>
+      ) : (
         <Item
-        key="/user/become-instructor"
-        onClick={(e) => setCurrent(e.key)}
-        icon={<TeamOutlined />}
-      >
-        <Link href="/user/become-instructor">
-          <a>Become Instructor</a>
-        </Link>
-      </Item>
+          key="/user/become-instructor"
+          onClick={(e) => setCurrent(e.key)}
+          icon={<TeamOutlined />}
+        >
+          <Link href="/user/become-instructor">
+            <a>Become Instructor</a>
+          </Link>
+        </Item>
       )}
 
       {user === null && (
@@ -110,6 +110,19 @@ const TopNav = () => {
             <Item onClick={logout}>Logout</Item>
           </ItemGroup>
         </SubMenu>
+      )}
+
+      {user && user.role && user.role.includes("Instructor") && (
+        <Item
+          key="/instructor"
+          onClick={(e) => setCurrent(e.key)}
+          icon={<TeamOutlined />}
+          className="float-right"
+        >
+          <Link href="/instructor">
+            <a>Instructor</a>
+          </Link>
+        </Item>
       )}
     </Menu>
   );

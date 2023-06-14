@@ -12,7 +12,7 @@ const Register = () => {
   const [email, setEmail] = useState("ryan@gmail.com");
   const [password, setPassword] = useState("rrrrrr");
   const [loading, setLoading] = useState(false);
-
+  
   const {
     state: { user },
   } = useContext(Context);
