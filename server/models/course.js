@@ -7,7 +7,7 @@ const lessonSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      trim: true,             //to remove whitespace in string
+      trim: true, //to remove whitespace in string
       minlength: 3,
       maxlength: 320,
       required: true,
@@ -21,7 +21,7 @@ const lessonSchema = new mongoose.Schema(
       type: {},
       minlength: 200,
     },
-    video_link: {},
+    video: {},
     free_preview: {
       type: Boolean,
       default: false,

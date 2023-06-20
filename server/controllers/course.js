@@ -113,6 +113,9 @@ export const read = async (req, res) => {
 
 export const uploadVideo = async (req, res) => {
   try {
+    if (req.user._id != req.params.instructorId) {
+      return res.status(400).send("Unauthorized");
+    }
     const { video } = req.files;
     if (!video) return res.status(400).send("No Video!");
 
@@ -160,4 +163,77 @@ export const removeVideo = async (req, res) => {
   } catch (err) {
     console.log(err);
   }
+};
+
+export const addLesson = async (req, res) => {
+  try {
+    const { slug, instructorId } = req.params;
+    const { title, content, video } = req.body;
+    if (req.user._id != instructorId) {
+      return res.status(400).send("Unauthorized");
+    }
+
+    const updated = await Course.findOneAndUpdate(
+      { slug },
+      {
+        $push: { lessons: { title, content, video, slug: slugify(title) } },
+      },
+      { new: true } //to include added lesson also
+    )
+      .populate("instructor", "_id name")
+      .exec();
+    res.json(updated);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Add Lesson failed");
+  }
+};
+
+export const publishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await Course.findById(courseId).select("instructor").exec();
+    if (req.user._id != course.instructor._id) {
+      return res.status(400).send("Unauthorized");
+    }
+    const updated = await Course.findByIdAndUpdate(
+      courseId,
+      {
+        published: true,
+      },
+      { new: true }
+    ).exec();
+    res.json(updated);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Publish course failed");
+  }
+};
+
+export const unpublishCourse = async (req, res) => {
+  try {
+    const { courseId } = req.params;
+    const course = await Course.findById(courseId).select("instructor").exec();
+    if (req.user._id != course.instructor._id) {
+      return res.status(400).send("Unauthorized");
+    }
+    const updated = await Course.findByIdAndUpdate(
+      courseId,
+      {
+        published: false,
+      },
+      { new: true }
+    ).exec();
+    res.json(updated);
+  } catch (err) {
+    console.log(err);
+    return res.status(400).send("Unpublish course failed");
+  }
+};
+
+export const courses = async (req, res) => {
+  const all = await Course.find({ published: true })
+    .populate("instructor", "_id name")
+    .exec();
+  res.json(all);
 };
