@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import SingleCourseCard from "../../components/cards/SingleCourseCard";
+import PreviewModal from "../../components/modal/PreviewModal";
 
 const SingleCourse = ({ course }) => {
   const [showModal, setShowModal] = useState(false);
@@ -18,6 +19,11 @@ const SingleCourse = ({ course }) => {
         setShowModal={setShowModal}
         preview={preview}
         setPreview={setPreview}
+      />
+      <PreviewModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+        preview={preview}
       />
     </>
   );
