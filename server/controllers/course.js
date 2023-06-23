@@ -237,3 +237,18 @@ export const courses = async (req, res) => {
     .exec();
   res.json(all);
 };
+
+export const checkEnrollment = async (req, res) => {
+  const { courseId } = req.params;
+  //find courses of currently loggedin user
+  const user = user.findById(req.user._id).exec();
+  // check if courseid is present in user courses array
+  let ids = [];
+  for (let i = 0; i < user.courses.length; i++) {
+    ids.push(user.courses[i].toString());
+  }
+  res.json({
+    status: ids.includes(courseId),
+    course: await Course.findById(courseId).exec(),
+  });
+};
