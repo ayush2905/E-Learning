@@ -13,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "@ant-design/icons": "^4.5.0",
+    "@stripe/stripe-js": "^1.54.1",
     "antd": "^4.13.1",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",

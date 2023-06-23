@@ -285,20 +285,25 @@ export const paidEnrollment = async (req, res) => {
     if (!course.paid) return;
     //application fee 30%
     const fee = (course.price * 30) / 100;
-    const session = await stripe.checkout.session.create({
+    const session = await stripe.checkout.sessions.create({
       payment_method_types: ["card"],
       // purchase details
       line_items: [
         {
-          name: course.name,
-          amount: Math.round(course.price.toFixed(2) * 100),
-          currency: "usd",
+          price_data: {
+            currency: "usd",
+            unit_amount: Math.round(course.price.toFixed(2) * 100),
+            product_data: {
+              name: course.name,
+            },
+          },
           quantity: 1,
         },
       ],
+      mode: "payment",
       //charge buyer aand transfer remaining balance to seller after fee
       payment_intent_data: {
-        application_fee_amount: Math.round(fee.price.toFixed(2) * 100),
+        application_fee_amount: Math.round(fee.toFixed(2) * 100),
         transfer_data: {
           destination: course.instructor.stripe_account_id,
         },
