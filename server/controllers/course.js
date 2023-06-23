@@ -323,3 +323,27 @@ export const paidEnrollment = async (req, res) => {
     return res.status(400).send("Enrollment create failed");
   }
 };
+
+export const stripeSuccess = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.courseId).exec();
+    //get stripe session id and update unpaid to paid
+    const user = await User.findById(req.user._id).exec();
+    if (!user.stripeSession.id) return res.sendStatus(400);
+    //retrieve stripe session
+    const session = await stripe.checkout.sessions.retrieve(
+      user.stripeSession.id
+    );
+    console.log("stripe success => ", session);
+    if (session.payment_status === "paid") {
+      await User.findByIdAndUpdate(user._id, {
+        $addToSet: { course: course._id },
+        $set: { stripeSession: {} },
+      }).exec();
+    }
+    res.json({ success: true, course });
+  } catch (err) {
+    console.log(err);
+    res.json({ success: false });
+  }
+};
