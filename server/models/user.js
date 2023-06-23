@@ -1,20 +1,20 @@
 import mongoose from "mongoose";
 const { Schema } = mongoose;
+const { ObjectId } = Schema;
 
-const imageSchema = new Schema(
-  {
-  key: { 
-    type: String, 
-    required: true 
+const imageSchema = new Schema({
+  key: {
+    type: String,
+    required: true,
   },
-  contentType: { 
-    type: String, 
-    required: true 
+  contentType: {
+    type: String,
+    required: true,
   },
   data: {
     type: Buffer,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const userSchema = new Schema(
@@ -51,9 +51,15 @@ const userSchema = new Schema(
     stripeSession: {},
     passwordResetcode: {
       data: String,
-      default: ""
+      default: "",
     },
-  },  
+    courses: [
+      {
+        type: ObjectId,
+        ref: "Course",
+      },
+    ],
+  },
   { timestamps: true }
 );
 

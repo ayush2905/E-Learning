@@ -5,6 +5,7 @@ import SingleCourseCard from "../../components/cards/SingleCourseCard";
 import PreviewModal from "../../components/modal/PreviewModal";
 import SingleCourseLessons from "../../components/cards/SingleCourseLessons";
 import { Context } from "../../context";
+import { toast } from "react-toastify";
 
 const SingleCourse = ({ course }) => {
   const [showModal, setShowModal] = useState(false);
@@ -29,9 +30,27 @@ const SingleCourse = ({ course }) => {
   const router = useRouter();
   const { slug } = router.query;
 
-  const handlePaidEnrollment = () => {};
+  const handlePaidEnrollment = async () => {
+    try {
+      setLoading(true);
+    } catch (err) {
+      toast("Enrollment failed, Try again later!");
+      console.log(err);
+      setLoading(false);
+    }
+  };
 
-  const handleFreeEnrollment = () => {};
+  const handleFreeEnrollment = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.post(`/api/free-enrollment/${course._id}`);
+      toast(data.message);
+    } catch (err) {
+      toast("Enrollment failed, Try again later!");
+      console.log(err);
+      setLoading(false);
+    }
+  };
 
   return (
     <>
