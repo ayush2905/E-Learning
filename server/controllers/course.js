@@ -241,10 +241,11 @@ export const courses = async (req, res) => {
 export const checkEnrollment = async (req, res) => {
   const { courseId } = req.params;
   //find courses of currently loggedin user
-  const user = user.findById(req.user._id).exec();
+  const user = User.findById(req.user._id).exec();
   // check if courseid is present in user courses array
   let ids = [];
-  for (let i = 0; i < user.courses.length; i++) {
+  let length = user.courses && user.courses.length;
+  for (let i = 0; i < length; i++) {
     ids.push(user.courses[i].toString());
   }
   res.json({

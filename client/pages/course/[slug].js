@@ -10,10 +10,21 @@ const SingleCourse = ({ course }) => {
   const [showModal, setShowModal] = useState(false);
   const [preview, setPreview] = useState("");
   const [loading, setLoading] = useState(false);
+  const [enrolled, setEnrolled] = useState({});
 
   const {
     state: { user },
   } = useContext(Context);
+
+  useEffect(() => {
+    if (user && course) checkEnrollment();
+  }, [user, course]);
+
+  const checkEnrollment = async () => {
+    const { data } = await axios.get(`/api/check-enrollment/${course._id}`);
+    console.log("Check enrollment", data);
+    setEnrolled(data);
+  };
 
   const router = useRouter();
   const { slug } = router.query;
@@ -35,6 +46,8 @@ const SingleCourse = ({ course }) => {
         loading={loading}
         handleFreeEnrollment={handleFreeEnrollment}
         handlePaidEnrollment={handlePaidEnrollment}
+        enrolled={enrolled}
+        setEnrolled={setEnrolled}
       />
       <PreviewModal
         showModal={showModal}
