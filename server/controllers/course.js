@@ -4,6 +4,7 @@ import Course from "../models/course";
 import { nanoid } from "nanoid";
 import slugify from "slugify";
 import { readFileSync } from "fs";
+const stripe = require("stripe")(process.env.STRIPE_SECRET);
 
 const awsConfig = {
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -242,7 +243,7 @@ export const checkEnrollment = async (req, res) => {
   const { courseId } = req.params;
   //find courses of currently loggedin user
   const user = await User.findById(req.user._id).exec();
-  console.log(user);
+  // console.log(user);
   // check if courseid is present in user courses array
   let ids = [];
   let length = user.courses && user.courses.length;
@@ -272,6 +273,48 @@ export const freeEnrollment = async (req, res) => {
     });
   } catch (err) {
     console.log("Free enrollment error");
+    return res.status(400).send("Enrollment create failed");
+  }
+};
+
+export const paidEnrollment = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.courseId)
+      .populate("instructor")
+      .exec();
+    if (!course.paid) return;
+    //application fee 30%
+    const fee = (course.price * 30) / 100;
+    const session = await stripe.checkout.session.create({
+      payment_method_types: ["card"],
+      // purchase details
+      line_items: [
+        {
+          name: course.name,
+          amount: Math.round(course.price.toFixed(2) * 100),
+          currency: "usd",
+          quantity: 1,
+        },
+      ],
+      //charge buyer aand transfer remaining balance to seller after fee
+      payment_intent_data: {
+        application_fee_amount: Math.round(fee.price.toFixed(2) * 100),
+        transfer_data: {
+          destination: course.instructor.stripe_account_id,
+        },
+      },
+      //redirect url after successful payment
+      success_url: `${process.env.STRIPE_SUCCESS_URL}/${course._id}`,
+      cancel_url: process.env.STRIPE_CANCEL_URL,
+    });
+    console.log("SESSION ID => ", session);
+    //saving because in case the user pays but on redirecting some proble occurs
+    await User.findByIdAndUpdate(req.user._id, {
+      stripeSession: session,
+    }).exec();
+    res.end(session.id);
+  } catch (err) {
+    console.log("Paid enrollment error ", err);
     return res.status(400).send("Enrollment create failed");
   }
 };
