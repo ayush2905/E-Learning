@@ -15,7 +15,7 @@ const SingleCourse = () => {
   }, [slug]);
 
   const loadCourse = async () => {
-    const { data } = await axios.get(`/api/course/${slug}`);
+    const { data } = await axios.get(`/api/user/course/${slug}`);
     setCourse(data);
   };
 
