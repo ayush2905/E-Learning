@@ -6,3 +6,7 @@
   background-image: linear-gradient(to right, #007bff, #000);
   color: #fff;
 }
+
+.pointer {
+  cursor: pointer;
+}

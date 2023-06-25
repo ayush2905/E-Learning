@@ -349,7 +349,6 @@ export const stripeSuccess = async (req, res) => {
 };
 
 export const userCourses = async (req, res) => {
-  console.log(req);
   const user = await User.findById(req.user._id).exec();
   const courses = await Course.find({ _id: { $in: user.courses } })
     .populate("instructor", "_id name")
