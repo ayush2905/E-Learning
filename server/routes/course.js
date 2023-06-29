@@ -23,6 +23,7 @@ import {
   paidEnrollment,
   stripeSuccess,
   userCourses,
+  markCompleted,
 } from "../controllers/course";
 
 router.get("/courses", courses);
@@ -54,5 +55,6 @@ router.get("/stripe-success/:courseId", requireSignin, stripeSuccess);
 
 router.get("/user-courses", requireSignin, userCourses);
 router.get("/user/course/:slug", requireSignin, isEnrolled, read);
+router.post("/mark-completed", requireSignin, markCompleted);
 
 module.exports = router;

@@ -355,3 +355,11 @@ export const userCourses = async (req, res) => {
     .exec();
   res.json(courses);
 };
+
+export const markCompleted = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.body;
+  } catch (err) {
+    console.log(err);
+  }
+};
