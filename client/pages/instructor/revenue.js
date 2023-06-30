@@ -22,7 +22,13 @@ const InstructorRevenue = () => {
   };
 
   const handlePayoutSettings = async () => {
-    console.log("handle payout settings");
+    try {
+      const { data } = await axios.get("/api/instructor/payout-settings");
+      window.location.href = data;
+    } catch (err) {
+      console.log(err);
+      alert("unable to access payout settings. Try again later.");
+    }
   };
 
   return (
@@ -52,10 +58,12 @@ const InstructorRevenue = () => {
             <hr />
             <h4>
               Payouts{" "}
-              <SettingOutlined
-                className="float-right pointer"
-                onClick={handlePayoutSettings}
-              />
+              {
+                <SettingOutlined
+                  className="float-right pointer"
+                  onClick={handlePayoutSettings}
+                />
+              }
             </h4>
             <small>
               Update your stripe account details or view previous payouts.
