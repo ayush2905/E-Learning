@@ -386,3 +386,15 @@ export const studentCount = async (req, res) => {
     console.log(err);
   }
 };
+
+export const instructorBalance = async (req, res) => {
+  try {
+    let user = await User.findById(req.user._id).exec();
+    const balance = await stripe.balance.retrieve({
+      stripeAccount: user.stripe_account_id,
+    });
+    res.json(balance);
+  } catch (err) {
+    console.log(err);
+  }
+};

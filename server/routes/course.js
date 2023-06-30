@@ -25,6 +25,7 @@ import {
   userCourses,
   markCompleted,
   studentCount,
+  instructorBalance,
 } from "../controllers/course";
 
 router.get("/courses", courses);
@@ -58,5 +59,7 @@ router.get("/user-courses", requireSignin, userCourses);
 router.get("/user/course/:slug", requireSignin, isEnrolled, read);
 router.post("/mark-completed", requireSignin, markCompleted);
 router.post("/instructor/student-count", requireSignin, studentCount);
+
+router.get("/instructor/balance", requireSignin, instructorBalance);
 
 module.exports = router;
