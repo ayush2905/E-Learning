@@ -2,6 +2,7 @@ import AWS from "aws-sdk";
 import User from "../models/user";
 import Course from "../models/course";
 import { nanoid } from "nanoid";
+import Completed from "../models/completed";
 import slugify from "slugify";
 import { readFileSync } from "fs";
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
@@ -359,6 +360,28 @@ export const userCourses = async (req, res) => {
 export const markCompleted = async (req, res) => {
   try {
     const { courseId, lessonId } = req.body;
+    const existing = await Completed.findOne({
+      user: req.user._id,
+      course: courseId,
+    }).exec();
+
+    if (existing) {
+      const updated = await Completed.findOneAndUpdate({
+        user: req.user._id,
+      });
+    } else {
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const studentCount = async (req, res) => {
+  try {
+    const users = await User.find({ courses: req.body.courseId })
+      .select("_id")
+      .exec();
+    res.json(users);
   } catch (err) {
     console.log(err);
   }
