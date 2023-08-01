@@ -4,6 +4,7 @@ const { createProxyMiddleware } = require("http-proxy-middleware");
 
 const dev = process.env.NODE_ENV !== "production";
 const app = next({ dev });
+//passes all incoming req to server side rendering
 const handle = app.getRequestHandler();
 
 app
@@ -21,6 +22,7 @@ app
       );
     }
 
+    //mount all http requests -get,put,post
     server.all("*", (req, res) => {
       return handle(req, res);
     });
