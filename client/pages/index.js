@@ -1,3 +1,4 @@
+//HOME PAGE
 import { useState, useEffect } from "react";
 import axios from "axios";
 import CourseCard from "../components/cards/CourseCard";

@@ -1,6 +1,7 @@
+//used to handle user auth and state
 import { useReducer, createContext, useEffect } from "react";
 import axios from "axios";
-import { useRouter, userRouter } from "next/router";
+import { useRouter } from "next/router";
 
 // initial state
 const intialState = {
